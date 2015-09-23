@@ -21,7 +21,7 @@ class TestStringMethods(unittest.TestCase):
     def testMultiply(self):
         uval = random.random()
         index = (self.spl.u > uval).argmax() - 1
-        a = self.spl.d([None, None, None], uval, index, self.spl.controlX, self.spl.u)
+        a = self.spl.d([None, None, None], uval, index, self.spl.controlX)
         b = sum([self.spl.knot_sequence(self.spl.u, i, 3)(uval) * self.spl.controlX[i] for i in range(len(self.spl.controlX))])
         self.assertAlmostEqual(a, b)
 

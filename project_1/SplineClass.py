@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from numpy import array, linspace, zeros, append, dot
+from numpy import array, linspace, dot
 from numpy.linalg import solve
 import matplotlib.pyplot as plt
 import copy as copy
@@ -18,6 +18,7 @@ class Spline(object):
         self.curveY = []
         self.minVal = 0.
         self.maxVal = 1.
+        self.degree = 3 #Dysfunctional
         self.changePoints(dataX, dataY, intersect)
 
     def __call__(self, numberOfPoints):
@@ -30,11 +31,10 @@ class Spline(object):
             raise ValueError('Unsupported "numberOfPoints" format %s. Must be of type int.' % str(type(numberOfPoints)))
         self.curveX = []
         self.curveY = []
-        uArr = array([0, 0] + linspace(0, 1, len(self.controlX) - 2).tolist() + [1, 1])
-        for element in linspace(.01, .99, 50).tolist():
-            i = (uArr > element).argmax() - 1
-            self.curveX.append(self.d([None, None, None], element, i, self.controlX, uArr))
-            self.curveY.append(self.d([None, None, None], element, i, self.controlY, uArr))
+        for element in linspace(.01, .99, numberOfPoints).tolist():
+            i = (self.u > element).argmax() - 1
+            self.curveX.append(self.d([None, None, None], element, i, self.controlX))
+            self.curveY.append(self.d([None, None, None], element, i, self.controlY))
 
     def changePoints(self, dataX, dataY, intersect):
         """
@@ -79,7 +79,7 @@ class Spline(object):
         points as calculated from the current u sequence.
         """
         xi = array([(self.u[i] + self.u[i + 1] + self.u[i + 2]) / 3 for i in range(len(self.u) - 2)])
-        vander = array([[self.knot_sequence(self.u, i, 3)(xiVal) for i in range(len(xi))] for xiVal in xi])
+        vander = array([[self.knot_sequence(self.u, i, self.degree)(xiVal) for i in range(len(xi))] for xiVal in xi])
         vander[len(xi) - 1][len(xi) - 1] = 1.
         return vander
         
@@ -95,7 +95,7 @@ class Spline(object):
         if option == 'basis':
             xx = linspace(0,1,100)
             for i in range(len(self.controlX)):
-                yy = [self.knot_sequence(self.u, i, 3)(x) for x in xx]
+                yy = [self.knot_sequence(self.u, i, self.degree)(x) for x in xx]
                 if i == len(self.controlX) - 1:
                     yy[99] = 1.0
                 plt.plot(xx, yy, 'b')
@@ -112,14 +112,14 @@ class Spline(object):
         else:
             raise TypeError('Unsupported option "%s". Must be of one of "basis", "control", "curve" or "XYpoints".' % option)
 
-    def d(self, indices, u, i, dxy, uArr):
+    def d(self, indices, uVal, i, dxy):
         if indices[0] != None:
             return dxy[indices[0]]
         elif not indices[2]:
             indicesA = [None, None, i + 1]
             indicesB = [None, None, i]
-            return (self.alpha([i, i +1], u, uArr) * self.d(indicesB, u, i, dxy, uArr) + 
-                    (1 - self.alpha([i, i + 1], u, uArr)) * self.d(indicesA, u, i, dxy, uArr))
+            return (self.alpha([i, i +1], uVal) * self.d(indicesB, uVal, i, dxy) + 
+                    (1 - self.alpha([i, i + 1], uVal)) * self.d(indicesA, uVal, i, dxy))
         else:
             indexX  = 2 - [x for x in reversed(indices)].index(None)
             indicesA = copy.copy(indices)
@@ -128,16 +128,16 @@ class Spline(object):
                 indicesA[ii] = indicesA[ii] + 1
             indicesB = copy.copy(indices)
             indicesB[indexX] = indices[indexX + 1] - 1
-            return (self.alpha(indicesA + indicesB, u, uArr) * self.d(indicesB, u, i, dxy, uArr) + 
-                    (1 - self.alpha(indicesA + indicesB, u, uArr)) * self.d(indicesA, u, i, dxy, uArr))
+            return (self.alpha(indicesA + indicesB, uVal) * self.d(indicesB, uVal, i, dxy) + 
+                    (1 - self.alpha(indicesA + indicesB, uVal)) * self.d(indicesA, uVal, i, dxy))
         
-    def alpha(self, arr, u, uArr):
-        return (uArr[max(arr)] - u) / (uArr[max(arr)] - uArr[min([x for x in arr if x is not None])])
+    def alpha(self, arr, uVal):
+        return (self.u[max(arr)] - uVal) / (self.u[max(arr)] - self.u[min([x for x in arr if x is not None])])
 
     def knot_sequence(self, p, i, k):
         if k == 0:
             if p[i - 1] == p[i]:
-                return lambda u: 1 if p[i - 1] <= 0 and u < p[i] else 0
+                return lambda u: 0
             else:
                 return lambda u: 1 if p[i - 1] <= u and u < p[i] else 0
         else:
