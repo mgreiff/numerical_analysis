@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from SplineClass import Spline
+from Spline_Class import Spline
 import unittest
 import random
 
