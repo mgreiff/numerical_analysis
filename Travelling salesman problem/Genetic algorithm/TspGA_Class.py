@@ -103,14 +103,4 @@ class TspGA(object):
         populationDist = np.array([sum([self.dist[population[jj][ii - 1], population[jj][ii]] for ii in range(n)]) for jj in range(self.populationSize)])
         index = np.where(populationDist == populationDist.min())
         self.path = population[index[0][0]]
-        
-        # Shuffles the order of the population
-
-tsp = TspGA(np.array([1,3,2,5,6, 7, 4, 6, 3, 4, 2, 5]), np.array([3,2,5,6,7, 1, 2,3, 2, 4, 5, 6]))
-tsp._genetic()
-plt.figure(1)
-tsp.plot(points = 1, solution = 1)
-plt.figure(2)
-tsp.path = [i for i in range(0, 9)]
-tsp.plot(points = 1, solution = 1)
 

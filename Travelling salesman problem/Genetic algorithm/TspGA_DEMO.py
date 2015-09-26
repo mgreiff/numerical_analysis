@@ -12,11 +12,11 @@ if __name__ == '__main__':
     if 1:
         plt.figure(1)
         tsp.plot(distance = 1)
-    if 0:
+    if 1:
         plt.figure(2)
         tsp._genetic()
         tsp.plot(solution = 1, points = 1)
-    if 0:
+    if 1:
         plt.figure(3)
         x = np.array([1, 2, 3, 5, 7, 8, 6])
         y = np.array([7, 4, 5, 1, 2, 4, 6])
