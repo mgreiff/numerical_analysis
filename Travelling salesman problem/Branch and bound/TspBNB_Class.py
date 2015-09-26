@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
 
-class TSP_Rec(object):
+class TspBNB(object):
     
     def __init__(self, dataX, dataY):
         """
@@ -26,16 +26,16 @@ class TSP_Rec(object):
             points (bool): Set totrue if the XY points are to be plotted
         """
         if solution:
-            print self.path
-            print self.xy[0]
             for ii in range(len(self.path) - 1):
-                plt.plot([self.xy[0][self.path[ii]], self.xy[0][self.path[ii + 1]]],
-                         [self.xy[1][self.path[ii]], self.xy[1][self.path[ii + 1]]], 'k')
+                plt.gca().plot([self.xy[0][self.path[ii]], self.xy[0][self.path[ii + 1]]],
+                               [self.xy[1][self.path[ii]], self.xy[1][self.path[ii + 1]]], 'k')
         if points:
-            plt.plot(self.xy[0], self.xy[1], 'ro', markersize=5)
+            plt.gca().plot(self.xy[0], self.xy[1],'ro', markersize=5)         
+            for i in range(len(self.xy[0])):
+                plt.gca().annotate("#" + str(i), (self.xy[0][i],self.xy[1][i]))
+                
         if distance:
-            plt.figure(2)
-            plt.matshow(self.dist)
+            plt.gca().matshow(self.dist)
             
 
     def _distance_matrix(self):
