@@ -66,23 +66,23 @@ sc = ax.scatter(anchors[:,0],
 for ii, txt in enumerate(np.arange(anchors.shape[0])):
     x2, y2, _ = proj3d.proj_transform(anchors[ii,0],anchors[ii,1],anchors[ii,2], ax.get_proj())
     plt.annotate(txt, xy = (x2, y2))
-
+plt.title('True anchor positions')
 ###############################
 ### plot generated solution ###
 ###############################
 ax = fig.add_subplot(122, projection = '3d')
-
 ax.scatter(estimatedPositions[:,0],
            estimatedPositions[:,1],
            estimatedPositions[:,2],
            edgecolor='green',
            linewidths=1)
+
 for ii, txt in enumerate(np.arange(estimatedPositions.shape[0])):
     x2, y2, _ = proj3d.proj_transform(estimatedPositions[ii,0],
                                       estimatedPositions[ii,1],
                                       estimatedPositions[ii,2], ax.get_proj())
     plt.annotate(txt, xy = (x2, y2))
-
+plt.title('Estimated anchor positions')
 ###############################
 ##### print the residual ######
 ###############################
