@@ -5,7 +5,7 @@ complete reports located in the /report directories, or a simple README.md file
 if the extent of the project doesn't warrant a full report.
 
 ## Contents
-#### /optimization_methods
+#### /optimization
 * A solver implementing quasi-newton methods (BFGS/DFP) for unconstrained
   optimization (similar to matlabs fminunc but without the need for costly licenses).
   The repo is complete with three examples of barrier/penalty formulations of
@@ -16,13 +16,18 @@ if the extent of the project doesn't warrant a full report.
 * A solver for the resource allocation problem (RAP), using a dual shadow cost
   formulation. (**Python**)
 
-#### /multigrid_methods
+#### /multigrid
 * A multigrid helmholtz equation solver complete with an example simulating the
   two dimensional wave equation with a vibrating membrane on the unit square, complete
   with a detailed report. (**Matlab**)
 
-#### /parallell_programming_methods
+#### /parallell-programming
 * A simple parallell solver for heat propagation in a irregular geometry, here a
   two dimensional ''house'' with three rooms. The scipt shows how the Pythons MPI
   extension can be used to solve the Poisson equation in a tricky computational
   domain. (**Python**)
+
+#### /multidimensional-scaling
+* Implementation of a solver for multidimensional scaling with an example
+  calibrating a UWB network using constraints and mutual distances between
+  the rain anchors. (**Python**)
