@@ -15,8 +15,8 @@ else:
 class TestUtilities(unittest.TestCase):
 
     def setUp(self):
-        # Loads data from any data file
-        self.numberOfAnchors = 8
+        # Runs tests with an excessive ammount of anchors, 100 by default
+        self.numberOfAnchors = 400
         self.anchors = np.random.randint(0,10,(self.numberOfAnchors,3))
 
     def test_distance_matrix(self):
@@ -48,7 +48,7 @@ class TestUtilities(unittest.TestCase):
         Dsq = util.get_distance_matrix_squared(self.anchors)
         
         # Test
-        Phat = util.multi_dimensional_scaling(Dsq)
+        Phat, res = util.multi_dimensional_scaling(Dsq)
         Dsq_comp = util.get_distance_matrix_squared(Phat)
 
         # Assert
@@ -60,6 +60,7 @@ class TestUtilities(unittest.TestCase):
             print e.message
             pass
         self.assertTrue(status)
+        self.assertAlmostEqual(res, 0.0)
     
     def test_get_skew_symmetric_operator(self):
         # Fixture
